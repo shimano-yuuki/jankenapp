@@ -36,12 +36,16 @@ class _JankenPageState extends State<JankenPage> {
   String myHand = goo;
   String computerHand = goo;
   String result = '引き分け';
+  int roundcount = 0;
+  int myselfcont = 0;
+  int enemycount = 0;
 
   void selectHand(String selectedHand) {
     myHand = selectedHand;
     print(myHand);
     generateComputerHand();
     judge();
+    fifth();
     setState(() {});
   }
 
@@ -65,16 +69,40 @@ class _JankenPageState extends State<JankenPage> {
 
   void judge() {
     // 引き分けの場合
-    if (myHand == computerHand) {
-      result = '引き分け';
-      // 勝ちの場合
-    } else if (myHand == goo && computerHand == choki ||
-        myHand == choki && computerHand == per ||
-        myHand == per && computerHand == goo) {
-      result = '勝ち';
-      // 負けの場合
-    } else {
-      result = '負け';
+
+    if (roundcount < 5) {
+      if (myHand == computerHand) {
+        result = '引き分け';
+        roundcount += 1;
+        // 勝ちの場合
+      } else if (myHand == goo && computerHand == choki ||
+          myHand == choki && computerHand == per ||
+          myHand == per && computerHand == goo) {
+        result = '勝ち';
+        myselfcont += 1;
+        roundcount += 1;
+        // 負けの場合
+      } else {
+        result = '負け';
+        enemycount += 1;
+        roundcount += 1;
+      }
+    }
+  }
+
+  void fifth() {
+    if (roundcount == 5) {
+      if (myselfcont > enemycount) {
+        result = '自分の勝ち';
+        roundcount = 0;
+        myselfcont = 0;
+        enemycount = 0;
+      } else if (myselfcont < enemycount) {
+        result = '相手の勝ち';
+        roundcount = 0;
+        myselfcont = 0;
+        enemycount = 0;
+      }
     }
   }
 
